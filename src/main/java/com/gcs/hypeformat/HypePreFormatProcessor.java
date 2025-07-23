@@ -12,12 +12,12 @@ public class HypePreFormatProcessor {
 
     public static void formatDocument(@NotNull Project project, @NotNull Document document) {
         PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-        if (psiFile == null) return;
+        if(psiFile == null)return;
 
         HypeFormatterService formatterService = project.getService(HypeFormatterService.class);
         HypeFormatterSettings settings = HypeFormatterSettings.getInstance();
 
-        if (!settings.isEnabled()) {
+        if(!settings.isEnabled()) {
             return;
         }
 
@@ -33,19 +33,19 @@ public class HypePreFormatProcessor {
         Project project = element.getProject();
         PsiFile psiFile = element.getContainingFile();
 
-        if (project == null || psiFile == null) {
+        if(psiFile == null) {
             return;
         }
 
         HypeFormatterService formatterService = project.getService(HypeFormatterService.class);
         HypeFormatterSettings settings = HypeFormatterSettings.getInstance();
 
-        if (!settings.isEnabled()) {
+        if(!settings.isEnabled()) {
             return;
         }
 
         Document document = psiFile.getViewProvider().getDocument();
-        if (document == null) return;
+        if(document == null)return;
 
         String originalText = document.getText(range);
         String formattedText = formatterService.formatText(originalText);

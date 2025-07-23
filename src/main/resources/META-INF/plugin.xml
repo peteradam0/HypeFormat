@@ -30,7 +30,7 @@
     <actions>
         <action id="HypeFormat.FormatCode" class="com.gcs.hypeformat.HypeFormatterAction" text="Format with HypeFormat" description="Format code using HypeFormat">
             <add-to-group group-id="CodeMenu" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift F"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift h"/>
         </action>
     </actions>
 </idea-plugin>

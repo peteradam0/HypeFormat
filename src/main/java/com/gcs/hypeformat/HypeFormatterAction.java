@@ -1,5 +1,6 @@
 package com.gcs.hypeformat;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -30,6 +31,11 @@ public class HypeFormatterAction extends AnAction {
             String formattedText = formatterService.formatText(originalText);
             document.setText(formattedText);
         });
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     @Override
