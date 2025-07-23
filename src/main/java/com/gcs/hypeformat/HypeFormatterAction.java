@@ -11,33 +11,33 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 public class HypeFormatterAction extends AnAction {
-    
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         Editor editor = e.getData(CommonDataKeys.EDITOR);
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        
+
         if (project == null || editor == null || psiFile == null) {
             return;
         }
-        
+
         HypeFormatterService formatterService = project.getService(HypeFormatterService.class);
         Document document = editor.getDocument();
-        
+
         WriteCommandAction.runWriteCommandAction(project, () -> {
             String originalText = document.getText();
             String formattedText = formatterService.formatText(originalText);
             document.setText(formattedText);
         });
     }
-    
+
     @Override
     public void update(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         Editor editor = e.getData(CommonDataKeys.EDITOR);
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        
+
         e.getPresentation().setEnabled(project != null && editor != null && psiFile != null);
     }
 }
