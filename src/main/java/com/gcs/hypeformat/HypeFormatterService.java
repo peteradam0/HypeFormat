@@ -1,5 +1,12 @@
 package com.gcs.hypeformat;
 
+import com.gcs.hypeformat.formatter.base.AbstractBaseLanguageFormatter;
+import com.gcs.hypeformat.formatter.language.AbstractBasicFormatter;
+import com.gcs.hypeformat.formatter.language.markup.HtmlFormatter;
+import com.gcs.hypeformat.formatter.language.markup.HtmxFormatter;
+import com.gcs.hypeformat.formatter.language.markup.JspFormatter;
+import com.gcs.hypeformat.formatter.language.scripting.HyperscriptFormatter;
+import com.gcs.hypeformat.formatter.language.scripting.JavaScriptFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
@@ -8,9 +15,11 @@ import com.intellij.psi.PsiFile;
 public final class HypeFormatterService {
 
     private final Project project;
+    private final AbstractBaseLanguageFormatter formatterChain;
 
     public HypeFormatterService(Project project) {
         this.project = project;
+        this.formatterChain = buildFormatterChain();
     }
 
     public String formatText(String text) {
@@ -57,19 +66,23 @@ public final class HypeFormatterService {
     }
 
     private String formatStatement(String statement) {
-        return statement
-                .replaceAll("\\s*=\\s*", " = ")
-                .replaceAll("\\s*\\+\\s*", " + ")
-                .replaceAll("\\s*-\\s*", " - ")
-                .replaceAll("\\s*\\*\\s*", " * ")
-                .replaceAll("\\s*/\\s*", " / ")
-                .replaceAll("\\s*,\\s*", ", ")
-                .replaceAll("\\s*;\\s*", "; ")
-                .replaceAll("\\s*\\(\\s*", "(")
-                .replaceAll("\\s*\\)\\s*", ")")
-                .replaceAll("\\s*\\{\\s*", " {")
-                .replaceAll("\\s*\\}\\s*", "}")
-                .replaceAll("\\s+", " ")
-                .trim();
+        return formatterChain.format(statement);
+    }
+    
+    private AbstractBaseLanguageFormatter buildFormatterChain() {
+        AbstractBasicFormatter basicFormatter = new AbstractBasicFormatter();
+        HtmlFormatter htmlFormatter = new HtmlFormatter();
+        JspFormatter jspFormatter = new JspFormatter();
+        JavaScriptFormatter jsFormatter = new JavaScriptFormatter();
+        HyperscriptFormatter hyperScriptFormatter = new HyperscriptFormatter();
+        HtmxFormatter htmxFormatter = new HtmxFormatter();
+
+        basicFormatter.setNext(htmlFormatter);
+        htmlFormatter.setNext(jspFormatter);
+        jspFormatter.setNext(jsFormatter);
+        jsFormatter.setNext(hyperScriptFormatter);
+        hyperScriptFormatter.setNext(htmxFormatter);
+
+        return htmlFormatter;
     }
 }
